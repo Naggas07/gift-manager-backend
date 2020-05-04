@@ -44,18 +44,19 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
+  console.log(req.session.user);
   req.session.destroy();
-  res.status(204).json({ message: "session destroyed" });
+  res.status(200).json({ message: "session destroyed" });
 };
 
 module.exports.updateUser = (req, res, next) => {
   const { id } = req.params;
+
   if (id != req.session.user.id && req.session.user.userType != "Admin") {
     res.status(403).json({ message: "Forbidden" });
   }
 
   const userUpdate = req.body;
-  console.log(req.file);
   if (req.file) {
     userUpdate.avatar = req.file.url;
   }
