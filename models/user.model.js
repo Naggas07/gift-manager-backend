@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const bcrypt = require("bcrypt");
-const SALTFACTOR = process.env.SALTFACTOR || 10;
+const SALTFACTOR = 10;
+const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 const userSchema = new Schema(
   {
@@ -13,10 +14,8 @@ const userSchema = new Schema(
       type: String,
       required: true,
       lowercase: true,
-      match: [
-        process.env.EMAIL_PATTERN,
-        "el email debe tener un formato válido",
-      ],
+      unique: true,
+      match: [EMAIL_PATTERN, "el email debe tener un formato válido"],
     },
     password: {
       type: String,
