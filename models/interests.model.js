@@ -11,10 +11,8 @@ const interestSchema = new Schema(
       type: String,
       enum: ["Active", "Pending", "Deprecated"],
     },
-    vote: {
-      type: Number,
-      min: 1,
-      max: 10,
+    description: {
+      type: String,
     },
   },
   {

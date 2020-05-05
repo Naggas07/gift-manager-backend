@@ -30,9 +30,9 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    interest: {
+    interests: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Interest",
+      ref: "UserInterest",
     },
   },
   {
