@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../models/user.model");
+const bcrypt = require("bcrypt");
+const SALTFACTOR = 10;
 
 module.exports.create = (req, res, next) => {
   const { name, password, email, userType } = req.body;
@@ -61,14 +63,38 @@ module.exports.updateUser = (req, res, next) => {
     userUpdate.avatar = req.file.url;
   }
 
-  User.findByIdAndUpdate(id, userUpdate, { new: true })
-    .then((user) => {
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
-      } else {
-        user.avatar = req.file ? req.file.url : user.avatar;
-        res.status(200).json(user);
-      }
+  if (req.body.password) {
+    bcrypt.genSalt(SALTFACTOR).then((salt) => {
+      return bcrypt.hash(req.body.password, salt).then((hash) => {
+        userUpdate.password = hash;
+        User.findByIdAndUpdate(id, userUpdate, {
+          new: true,
+          useFindAndModify: false,
+        })
+          .then((user) => {
+            if (!user) {
+              res.status(404).json({ message: "User not found" });
+            } else {
+              user.avatar = req.file ? req.file.url : user.avatar;
+              res.status(200).json(user);
+            }
+          })
+          .catch(next);
+      });
+    });
+  } else {
+    User.findByIdAndUpdate(id, userUpdate, {
+      new: true,
+      useFindAndModify: false,
     })
-    .catch(next);
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: "User not found" });
+        } else {
+          user.avatar = req.file ? req.file.url : user.avatar;
+          res.status(200).json(user);
+        }
+      })
+      .catch(next);
+  }
 };
