@@ -19,17 +19,20 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
       minlength: 4,
     },
     userType: {
       type: String,
       required: true,
-      enum: ["User", "Admin"],
+      enum: ["User", "Admin", "Unregistered"],
     },
     avatar: {
       type: String,
       default: null,
+    },
+    interest: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Interest",
     },
   },
   {

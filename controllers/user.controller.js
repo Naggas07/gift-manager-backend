@@ -13,6 +13,9 @@ module.exports.create = (req, res, next) => {
     avatar: req.file ? req.file.url : null,
   };
 
+  if (user.userType === "Unregistered") {
+    user.password = user.email;
+  }
   User.create(user)
     .then((user) => {
       res.status(201).json(user);
@@ -53,10 +56,6 @@ module.exports.logout = (req, res) => {
 
 module.exports.updateUser = (req, res, next) => {
   const { id } = req.params;
-
-  if (id != req.session.user.id && req.session.user.userType != "Admin") {
-    res.status(403).json({ message: "Forbidden" });
-  }
 
   const userUpdate = req.body;
   if (req.file) {
