@@ -5,6 +5,15 @@ const bcrypt = require("bcrypt");
 const SALTFACTOR = 10;
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
+const generateRandomToken = () => {
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+};
+
 const userSchema = new Schema(
   {
     name: {
@@ -33,6 +42,10 @@ const userSchema = new Schema(
     interests: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "UserInterest",
+    },
+    token: {
+      type: String,
+      default: generateRandomToken,
     },
   },
   {

@@ -4,11 +4,13 @@ const userController = require("../controllers/user.controller");
 
 //midlewares
 
+const upload = require("../config/cloudinary.config");
+
 //routes
 
-router.post("/register", userController.create);
+router.post("/register", upload.single("avatar"), userController.create);
 router.post("/login", userController.login);
 router.post("/logout", userController.logout);
-router.put("/update/:id", userController.updateUser);
+router.put("/update/:id", upload.single("avatar"), userController.updateUser);
 
 module.exports = router;
