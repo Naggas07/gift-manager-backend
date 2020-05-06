@@ -33,7 +33,12 @@ const userSchema = new Schema(
     userType: {
       type: String,
       required: true,
-      enum: ["User", "Admin", "Unregistered", "Pending"],
+      enum: ["User", "Admin"],
+    },
+    state: {
+      type: String,
+      required: true,
+      enum: ["Active", "Pending", "Unregistered"],
     },
     avatar: {
       type: String,

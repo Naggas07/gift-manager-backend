@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const SALTFACTOR = 10;
@@ -13,7 +12,7 @@ module.exports.create = (req, res, next) => {
     avatar: req.file ? req.file.url : null,
   };
 
-  if (user.userType === "Unregistered") {
+  if (user.state === "Unregistered") {
     user.password = user.email;
   }
   User.create(user)
@@ -96,4 +95,21 @@ module.exports.updateUser = (req, res, next) => {
       })
       .catch(next);
   }
+};
+
+module.exports.sendValidateToken = (req, res, next) => {
+  const { id } = req.params;
+
+  User.findById(id).then((user) => {
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      if (user.state === "Active") {
+        res.status(404).json({ message: "User validated" });
+      } else {
+        // aqui va como el envio del propio email
+        res.status(200).json({ message: "Email send" });
+      }
+    }
+  });
 };
